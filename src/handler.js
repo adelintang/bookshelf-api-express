@@ -46,8 +46,24 @@ const addBookHandler = (req, res) => {
 };
 
 const getAllBooksHandler = (req, res) => {
-  const result = filteredBooks(books);
-  response(200, 'success', { data: { books: result } }, res);
+  const { name, reading, finished } = req.query;
+
+  if (name) {
+    const filterByName = books.filter((book) => name.toLowerCase().split('').every((e) => book.name.toLowerCase().includes(e)));
+    const result = filteredBooks(filterByName);
+    response(200, 'success', { data: { books: result } }, res);
+  } else if (reading) {
+    const filterByReading = books.filter((book) => book.reading === Boolean(Number(reading)));
+    const result = filteredBooks(filterByReading);
+    response(200, 'success', { data: { data: result } }, res);
+  } else if (finished) {
+    const filterByFinished = books.filter((book) => book.finished === Boolean(Number(finished)));
+    const result = filteredBooks(filterByFinished);
+    response(200, 'success', { data: { data: result } }, res);
+  } else {
+    const result = filteredBooks(books);
+    response(200, 'success', { data: { books: result } }, res);
+  }
 };
 
 const getBookByIdHandler = (req, res) => {
